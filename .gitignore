@@ -3,4 +3,6 @@ newenv/
 .ipynb_checkpoints/
 
 
+.env
+
 
