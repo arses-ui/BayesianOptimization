@@ -2,6 +2,7 @@ import cv2
 import numpy as np 
 from tkinter import filedialog, Tk, Label, Button 
 from PIL import Image, ImageTk
+import json
 
 def calculate_line_Width(image): 
 
@@ -27,15 +28,16 @@ def calculate_line_Width(image):
 
         if area > 1000 and  w < h:  # Filter out small noise
             thickness = w
-            widths.append(thickness)
-            cv2.rectangle(display_img,(x,y),(x+w,y+h),(0,255,0),2)
+            width = thickness*0.00347
+            widths.append(width)
+            cv2.rectangle(display_img,(x,y),(x+w,y+h),(255,255,255),2)
             center = (int((x+x+w)/2), int((y+y+h)/2))
-            cv2.putText(display_img,f"{thickness:.1f}px", center, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 1)   
+            cv2.putText(display_img,f"{width:.3f}mm", center, cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 3)   
+
 
     if not widths:
         return "No line-like regions found"
-    
-    return display_img,  f"Estimated line width: {np.mean(widths):.2f} px"
+    return display_img,  f"Estimated line width: {np.mean(widths):.3f} millimeters"
 
 def open_file():
     image = filedialog.askopenfilename()
@@ -56,9 +58,34 @@ def open_file():
         result_label.config(text=result_text)
 
 
+
+
+def filesetup(): 
+    # Define the data as a Python dictionary
+    data = {
+        "name": "John Doe",
+        "age": 30,
+        "isStudent": False,
+        "courses": ["Math", "Science", "History"],
+        "address": {
+            "street": "123 Main St",
+            "city": "Anytown",
+            "zipCode": "12345"
+        }
+    }
+
+# Specify the output file name
+file_name = "output.json"
+
+# Write the data to the JSON file
+with open(file_name, 'w') as json_file:
+    json.dump(data, json_file, indent=4) # indent for pretty printing
+
+print(f"JSON data written to {file_name}")
 # GUI setup
 root = Tk()
-root.title("Line Width Estimator (Half-Rectangle)")
+root.title("Line Width Estimator")
+
 
 upload_btn = Button(root, text="Upload Image", command=open_file)
 upload_btn.pack(pady=10)
