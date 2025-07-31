@@ -1,4 +1,7 @@
-import cv2 
+import cv2
+import os
+os.environ['TCL_LIBRARY'] = r"C:\Users\Scheideler's Lab\AppData\Local\Programs\Python\Python313\tcl\tcl8.6"
+
 import numpy as np 
 from tkinter import filedialog, Tk, Label, Button 
 from PIL import Image, ImageTk
@@ -10,7 +13,7 @@ def calculate_line_Width(image):
     _, thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     # Optional: Morphological cleaning
-    kernel = np.ones((5,5), np.uint8)
+    kernel = np.ones((7,7), np.uint8)
     cleaned = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 
     # Find contours
@@ -36,7 +39,8 @@ def calculate_line_Width(image):
 
 
     if not widths:
-        return "No line-like regions found"
+        return display_img , "No line-like regions found"
+    print
     return display_img,  f"Estimated line width: {np.mean(widths):.3f} millimeters"
 
 def open_file():
@@ -60,28 +64,30 @@ def open_file():
 
 
 
-def filesetup(): 
-    # Define the data as a Python dictionary
-    data = {
-        "name": "John Doe",
-        "age": 30,
-        "isStudent": False,
-        "courses": ["Math", "Science", "History"],
-        "address": {
-            "street": "123 Main St",
-            "city": "Anytown",
-            "zipCode": "12345"
-        }
-    }
+# def filesetup(): 
+#     # Define the data as a Python dictionary
+#     data = {
+#         "name": "John Doe",
+#         "age": 30,
+#         "isStudent": False,
+#         "courses": ["Math", "Science", "History"],
+#         "address": {
+#             "street": "123 Main St",
+#             "city": "Anytown",
+#             "zipCode": "12345"
+#         }
+#     }
 
-# Specify the output file name
-file_name = "output.json"
+# # Specify the output file name
+# file_name = "output.json"
 
-# Write the data to the JSON file
-with open(file_name, 'w') as json_file:
-    json.dump(data, json_file, indent=4) # indent for pretty printing
+# # Write the data to the JSON file
+# with open(file_name, 'w') as json_file:
+# #     json.dump(data, json_file, indent=4) # indent for pretty printing
 
-print(f"JSON data written to {file_name}")
+# print(f"JSON data written to {file_name}")
+
+
 # GUI setup
 root = Tk()
 root.title("Line Width Estimator")
